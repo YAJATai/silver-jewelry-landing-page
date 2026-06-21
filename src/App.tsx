@@ -330,9 +330,37 @@ const SELECTED_COLLECTIONS = [
   },
 ];
 
+const TESTIMONIALS = [
+  {
+    quote: "The weight of the silver, the precision of the facets — it feels less like jewelry and more like a continuation of the hand that made it. I have not taken my band off since the fitting.",
+    name: "Camille Duras",
+    title: "Curator, Musée des Arts Décoratifs",
+    initials: "CD",
+  },
+  {
+    quote: "I commissioned a bespoke torque for my husband's fortieth. The atelier invited us into the process — sketches, wax carvings, even the choice of hammer texture. It is now the most cherished object in his collection.",
+    name: "James Whitfield-Stahl",
+    title: "Private Collector, London",
+    initials: "JW",
+  },
+  {
+    quote: "What drew me to Atelier of Silver was the philosophy: every mark of the hammer is preserved. This is not mass production. It is sculpture you can wear.",
+    name: "Inés Mendoza",
+    title: "Fashion Editor, Vogue España",
+    initials: "IM",
+  },
+  {
+    quote: "The Cascade Ridge Band arrived in a simple linen pouch, with a handwritten note from the silversmith. That human touch is worth more than any velvet box.",
+    name: "Ryo Tanaka",
+    title: "Architect & Design Patron",
+    initials: "RT",
+  },
+];
+
 export default function App() {
   // Navigation states and modals
   const [activeModal, setActiveModal] = useState<"booking" | "bespoke" | "collections" | "craft-watch" | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   // Scrolled check for minimal nav styling
   const [scrolled, setScrolled] = useState(false);
@@ -349,16 +377,23 @@ export default function App() {
   const [bespokeSubmitted, setBespokeSubmitted] = useState(false);
 
   // Smooth scroll method
-  const scrollToCraftsmanship = () => {
-    const section = document.getElementById("craftsmanship-section");
+  const scrollTo = (id: string) => {
+    const section = document.getElementById(id);
     if (section) {
       section.scrollIntoView({ behavior: "smooth" });
     }
+    setMobileMenuOpen(false);
   };
 
   const scrollToHero = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
+    setMobileMenuOpen(false);
   };
+
+  const [email, setEmail] = useState("");
+  const [newsletterSubmitted, setNewsletterSubmitted] = useState(false);
+
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
 
   return (
     <main className="relative min-h-screen bg-black text-white selection:bg-white/20">
@@ -397,7 +432,7 @@ export default function App() {
               Collections
             </button>
             <button 
-              onClick={scrollToCraftsmanship} 
+              onClick={() => scrollTo("craftsmanship-section")} 
               className="px-3 py-2 text-sm font-medium text-white/90 font-body hover:text-white transition-colors cursor-pointer"
             >
               Craftsmanship
@@ -426,14 +461,25 @@ export default function App() {
             </button>
           </div>
 
-          {/* Mobile Booking Trigger (Visible only on mobile to let them access Booking) */}
-          <button
-            id="mobile-nav-book"
-            onClick={() => setActiveModal("booking")}
-            className="md:hidden liquid-glass rounded-full px-4 py-2 text-xs font-semibold text-white/95"
-          >
-            Book
-          </button>
+          {/* Mobile: hamburger + book */}
+          <div className="md:hidden flex items-center gap-2">
+            <button
+              onClick={() => setActiveModal("booking")}
+              className="liquid-glass rounded-full px-4 py-2 text-xs font-semibold text-white/95"
+            >
+              Book
+            </button>
+            <button
+              onClick={() => setMobileMenuOpen(true)}
+              className="w-12 h-12 flex items-center justify-center liquid-glass rounded-full text-white"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <line x1="4" y1="6" x2="20" y2="6" />
+                <line x1="4" y1="12" x2="20" y2="12" />
+                <line x1="4" y1="18" x2="20" y2="18" />
+              </svg>
+            </button>
+          </div>
 
           {/* Right: 48x48 invisible spacer to balance logo */}
           <div className="w-12 h-12 invisible hidden md:block"></div>
@@ -750,9 +796,270 @@ export default function App() {
         </div>
       </section>
 
-      {/* Footer copyright */}
-      <footer className="bg-black py-8 border-t border-white/5 text-center text-xs text-white/40 tracking-wider uppercase">
-        © 2026 Atelier of Silver. All Rights Reserved.
+      {/* Section 3 — Featured Collections */}
+      <section id="collections-section" className="relative w-full bg-black overflow-hidden z-10 py-28 px-6 md:px-16 lg:px-20">
+        <div className="max-w-7xl mx-auto w-full">
+          <motion.div
+            initial={{ filter: "blur(10px)", opacity: 0, y: 30 }}
+            whileInView={{ filter: "blur(0px)", opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-10% 0px" }}
+            transition={{ duration: 0.9, ease: "easeOut" }}
+            className="mb-4"
+          >
+            <div className="text-xs md:text-sm font-semibold tracking-widest font-body text-white/70 mb-4 uppercase">
+              // Featured Works
+            </div>
+            <h2 className="font-heading italic text-white text-5xl md:text-6xl lg:text-[5rem] leading-[0.85] tracking-[-3px] mb-4">
+              Selected<br />collections
+            </h2>
+            <p className="text-sm md:text-base text-white/60 font-body font-light max-w-xl leading-relaxed">
+              Each piece in our current rotation represents a distinct conversation between the maker's hand and the metal's memory.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+            {SELECTED_COLLECTIONS.map((item, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ filter: "blur(10px)", opacity: 0, y: 40 }}
+                whileInView={{ filter: "blur(0px)", opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-10%" }}
+                transition={{ duration: 0.8, ease: "easeOut", delay: idx * 0.15 }}
+                className="group cursor-pointer"
+                onClick={() => setActiveModal("collections")}
+              >
+                <div className="relative overflow-hidden rounded-[1.25rem] mb-4 aspect-[4/5] liquid-glass">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    referrerPolicy="no-referrer"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <div className="flex justify-between items-end">
+                      <h3 className="font-heading italic text-2xl text-white">{item.name}</h3>
+                      <span className="font-body font-semibold text-sm text-white/90">{item.price}</span>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-xs text-white/60 font-body font-light leading-relaxed mb-1.5">
+                  {item.description}
+                </p>
+                <span className="text-[10px] uppercase tracking-wider text-white/40 font-body font-medium">
+                  {item.specs}
+                </span>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.div
+            initial={{ filter: "blur(10px)", opacity: 0, y: 20 }}
+            whileInView={{ filter: "blur(0px)", opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: "easeOut", delay: 0.5 }}
+            className="flex justify-center mt-12"
+          >
+            <button
+              onClick={() => setActiveModal("collections")}
+              className="liquid-glass-strong rounded-full px-8 py-3.5 text-sm font-semibold text-white flex items-center gap-2 hover:scale-[1.03] active:scale-95 transition-transform duration-200 cursor-pointer"
+            >
+              View Full Collection
+              <ArrowUpRight className="h-5 w-5 text-white" />
+            </button>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Section 4 — Testimonials */}
+      <section id="testimonials-section" className="relative w-full bg-black overflow-hidden z-10 py-28 px-6 md:px-16 lg:px-20">
+        <div className="max-w-7xl mx-auto w-full">
+          <motion.div
+            initial={{ filter: "blur(10px)", opacity: 0, y: 30 }}
+            whileInView={{ filter: "blur(0px)", opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-10% 0px" }}
+            transition={{ duration: 0.9, ease: "easeOut" }}
+            className="mb-4 text-center"
+          >
+            <div className="text-xs md:text-sm font-semibold tracking-widest font-body text-white/70 mb-4 uppercase">
+              // The Atelier Chronicle
+            </div>
+            <h2 className="font-heading italic text-white text-5xl md:text-6xl lg:text-[5rem] leading-[0.85] tracking-[-3px] mb-4">
+              Voices of<br />our patrons
+            </h2>
+          </motion.div>
+
+          <div className="max-w-3xl mx-auto mt-12">
+            <motion.div
+              key={activeTestimonial}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="liquid-glass rounded-[1.25rem] p-8 md:p-12 text-center"
+            >
+              <svg className="w-10 h-10 text-white/20 mx-auto mb-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+              </svg>
+              <p className="font-heading italic text-xl md:text-2xl text-white/90 leading-relaxed mb-8">
+                "{TESTIMONIALS[activeTestimonial].quote}"
+              </p>
+              <div className="flex items-center justify-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-white/10 border border-white/10 flex items-center justify-center text-sm font-heading italic text-white">
+                  {TESTIMONIALS[activeTestimonial].initials}
+                </div>
+                <div className="text-left">
+                  <div className="font-heading italic text-white text-lg">{TESTIMONIALS[activeTestimonial].name}</div>
+                  <div className="text-[10px] uppercase tracking-widest text-white/40 font-body font-medium">{TESTIMONIALS[activeTestimonial].title}</div>
+                </div>
+              </div>
+            </motion.div>
+
+            <div className="flex items-center justify-center gap-3 mt-8">
+              {TESTIMONIALS.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setActiveTestimonial(idx)}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    idx === activeTestimonial ? "bg-white w-6" : "bg-white/20 hover:bg-white/40"
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 5 — Newsletter */}
+      <section id="newsletter-section" className="relative w-full bg-black overflow-hidden z-10 py-28 px-6 md:px-16 lg:px-20">
+        <FadingVideo
+          src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260418_080021_d598092b-c4c2-4e53-8e46-94cf9064cd50.mp4"
+          className="absolute inset-0 w-full h-full object-cover z-0 opacity-40"
+        />
+        <div className="relative z-10 max-w-3xl mx-auto w-full text-center">
+          <motion.div
+            initial={{ filter: "blur(10px)", opacity: 0, y: 30 }}
+            whileInView={{ filter: "blur(0px)", opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-10% 0px" }}
+            transition={{ duration: 0.9, ease: "easeOut" }}
+          >
+            <div className="text-xs md:text-sm font-semibold tracking-widest font-body text-white/70 mb-4 uppercase">
+              // Stay Connected
+            </div>
+            <h2 className="font-heading italic text-white text-5xl md:text-6xl leading-[0.85] tracking-[-3px] mb-4">
+              The Atelier<br />Dispatch
+            </h2>
+            <p className="text-sm md:text-base text-white/60 font-body font-light max-w-lg mx-auto leading-relaxed mb-10">
+              Receive invitations to private viewings, early access to new collections, and dispatches from the workbench.
+            </p>
+
+            {newsletterSubmitted ? (
+              <motion.div
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="liquid-glass rounded-[1.25rem] p-8 max-w-md mx-auto"
+              >
+                <div className="w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <p className="font-heading italic text-2xl text-white">You're on the list</p>
+                <p className="text-xs text-white/60 mt-2 font-body font-light">Welcome to the Atelier.</p>
+              </motion.div>
+            ) : (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (email) setNewsletterSubmitted(true);
+                }}
+                className="flex flex-col sm:flex-row items-center gap-3 max-w-md mx-auto"
+              >
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="your@email.com"
+                  className="flex-1 w-full bg-white/5 border border-white/10 rounded-full px-5 py-3.5 text-sm focus:outline-none focus:border-white/40 text-white font-body placeholder:text-white/30"
+                />
+                <button
+                  type="submit"
+                  className="w-full sm:w-auto bg-white text-black rounded-full px-6 py-3.5 text-sm font-semibold transition hover:scale-[1.03] active:scale-95 whitespace-nowrap"
+                >
+                  Subscribe
+                </button>
+              </form>
+            )}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-black border-t border-white/5 z-10 relative">
+        <div className="max-w-7xl mx-auto px-6 md:px-16 lg:px-20 py-16">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+            <div className="col-span-2 md:col-span-1">
+              <button onClick={scrollToHero} className="w-12 h-12 rounded-full flex items-center justify-center liquid-glass font-heading italic text-3xl font-medium text-white mb-4 cursor-pointer">
+                s
+              </button>
+              <p className="text-xs text-white/40 font-body font-light leading-relaxed max-w-[20ch]">
+                Hand-cast sterling silver, forged in the atelier. Each piece hallmarked and certified.
+              </p>
+            </div>
+            <div>
+              <h4 className="font-heading italic text-white text-lg mb-4">Navigate</h4>
+              <ul className="space-y-2.5">
+                {[
+                  { label: "Collections", action: () => setActiveModal("collections") },
+                  { label: "Craftsmanship", action: () => scrollTo("craftsmanship-section") },
+                  { label: "Bespoke", action: () => setActiveModal("bespoke") },
+                  { label: "Atelier Visit", action: () => setActiveModal("booking") },
+                ].map((link) => (
+                  <li key={link.label}>
+                    <button
+                      onClick={link.action}
+                      className="text-xs text-white/50 hover:text-white transition-colors font-body font-medium cursor-pointer"
+                    >
+                      {link.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-heading italic text-white text-lg mb-4">Support</h4>
+              <ul className="space-y-2.5">
+                {["Shipping & Returns", "Care Guide", "Certificate of Authenticity", "FAQ"].map((item) => (
+                  <li key={item}>
+                    <span className="text-xs text-white/50 hover:text-white transition-colors font-body font-medium cursor-pointer">
+                      {item}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-heading italic text-white text-lg mb-4">Connect</h4>
+              <ul className="space-y-2.5">
+                {["Instagram", "Pinterest", "Vimeo", "The Journal"].map((item) => (
+                  <li key={item}>
+                    <span className="text-xs text-white/50 hover:text-white transition-colors font-body font-medium cursor-pointer">
+                      {item}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-8 border-t border-white/5">
+            <p className="text-[10px] text-white/30 tracking-wider uppercase font-body">
+              © 2026 Atelier of Silver. All Rights Reserved.
+            </p>
+            <p className="text-[10px] text-white/20 tracking-wider font-body">
+              Ethics & Sustainability · Privacy · Terms
+            </p>
+          </div>
+        </div>
       </footer>
 
       {/* Interactive Modal Manager */}
@@ -1092,6 +1399,64 @@ export default function App() {
                   A visual documentation of our hand-carving and casting workflow. From initial graphite sketch to smelting pure silver grains, followed by three levels of polishing with premium abrasive creams and micro-fiber chamois.
                 </p>
               </div>
+            </motion.div>
+          </motion.div>
+        )}
+
+        {/* Mobile Navigation Drawer */}
+        {mobileMenuOpen && (
+          <motion.div
+            id="mobile-menu-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/90 backdrop-blur-xl z-50 md:hidden"
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 30, stiffness: 300 }}
+              className="absolute right-0 top-0 h-full w-72 bg-neutral-950 border-l border-white/10 p-8 flex flex-col"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex justify-between items-center mb-10 pb-4 border-b border-white/5">
+                <span className="font-heading italic text-2xl text-white">Menu</span>
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-8 h-8 rounded-full flex items-center justify-center border border-white/10 hover:bg-white/5 text-white/80"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <nav className="flex flex-col gap-2 flex-1">
+                {[
+                  { label: "Home", action: scrollToHero },
+                  { label: "Collections", action: () => { setMobileMenuOpen(false); setActiveModal("collections"); } },
+                  { label: "Craftsmanship", action: () => scrollTo("craftsmanship-section") },
+                  { label: "Featured Works", action: () => scrollTo("collections-section") },
+                  { label: "Testimonials", action: () => scrollTo("testimonials-section") },
+                  { label: "Bespoke", action: () => { setMobileMenuOpen(false); setActiveModal("bespoke"); } },
+                  { label: "Visit Atelier", action: () => { setMobileMenuOpen(false); setActiveModal("booking"); } },
+                ].map((link) => (
+                  <button
+                    key={link.label}
+                    onClick={link.action}
+                    className="text-left px-4 py-3.5 rounded-xl text-sm font-body font-medium text-white/80 hover:text-white hover:bg-white/5 transition-all"
+                  >
+                    {link.label}
+                  </button>
+                ))}
+              </nav>
+
+              <button
+                onClick={() => { setMobileMenuOpen(false); setActiveModal("booking"); }}
+                className="w-full text-center bg-white text-black py-4 rounded-full font-semibold transition hover:scale-[1.02] active:scale-95 mt-auto"
+              >
+                Book a Viewing
+              </button>
             </motion.div>
           </motion.div>
         )}
