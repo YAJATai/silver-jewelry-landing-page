@@ -1,0 +1,6 @@
+{
+  "name": "Silver Jewelry Landing Page",
+  "description": "Luxury Silver Jewelry landing page with liquid-glass design, premium handcrafting showcases, and cinematic looping videos.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
