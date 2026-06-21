@@ -306,27 +306,26 @@ export function BlurText({ text, className }: BlurTextProps) {
 }
 
 // Mock Collection masterpieces for beautiful interactives
+const COLLECTION_ICONS = [HammerIcon, DiamondIcon, ShieldBadgeIcon];
+
 const SELECTED_COLLECTIONS = [
   {
     name: "The Hammered Torque",
     price: "$1,850",
     description: "Solid 925 sterling collar featuring variable weight transitions and deep chiseled facets.",
     specs: "Hand-cast · 82g sterling · Certified hallmark",
-    image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&q=80&w=600",
   },
   {
     name: "Argent Choker",
     price: "$2,400",
     description: "Flowing organic line designed to rest effortlessly on the collarbone, mirror-polished.",
     specs: "Anticlastic forming · 110g sterling · Signed piece",
-    image: "https://images.unsplash.com/photo-1611085583191-a3b1a1a27d61?auto=format&fit=crop&q=80&w=600",
   },
   {
     name: "Cascade Ridge Band",
     price: "$480",
     description: "Heavy multi-tiered wedding band reflecting direct raw hammer striations.",
     specs: "Oxidized recess · Hand-cast · Lifetime mark",
-    image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&q=80&w=600",
   },
 ];
 
@@ -796,7 +795,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* Section 3 — Featured Collections */}
+      {/* Section 3 — Featured Collections (icon-based glass cards, no photos) */}
       <section id="collections-section" className="relative w-full bg-black overflow-hidden z-10 py-28 px-6 md:px-16 lg:px-20">
         <div className="max-w-7xl mx-auto w-full">
           <motion.div
@@ -825,30 +824,21 @@ export default function App() {
                 whileInView={{ filter: "blur(0px)", opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-10%" }}
                 transition={{ duration: 0.8, ease: "easeOut", delay: idx * 0.15 }}
-                className="group cursor-pointer"
                 onClick={() => setActiveModal("collections")}
+                className="liquid-glass rounded-[1.25rem] p-6 min-h-[360px] flex flex-col justify-between cursor-pointer hover:scale-[1.01] transition-transform duration-300"
               >
-                <div className="relative overflow-hidden rounded-[1.25rem] mb-4 aspect-[4/5] liquid-glass">
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    referrerPolicy="no-referrer"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                  <div className="absolute bottom-4 left-4 right-4">
-                    <div className="flex justify-between items-end">
-                      <h3 className="font-heading italic text-2xl text-white">{item.name}</h3>
-                      <span className="font-body font-semibold text-sm text-white/90">{item.price}</span>
-                    </div>
+                <div className="flex items-start justify-between gap-4">
+                  <div className="w-11 h-11 rounded-[0.75rem] flex items-center justify-center bg-white/5 border border-white/10 text-white shadow-sm">
+                    {idx === 0 ? <HammerIcon className="h-5 w-5" /> : idx === 1 ? <DiamondIcon className="h-5 w-5" /> : <ShieldBadgeIcon className="h-5 w-5" />}
                   </div>
+                  <span className="font-body font-semibold text-sm text-white/90">{item.price}</span>
                 </div>
-                <p className="text-xs text-white/60 font-body font-light leading-relaxed mb-1.5">
-                  {item.description}
-                </p>
-                <span className="text-[10px] uppercase tracking-wider text-white/40 font-body font-medium">
-                  {item.specs}
-                </span>
+                <div className="flex-1" />
+                <div className="mt-8">
+                  <h3 className="font-heading italic text-white text-3xl md:text-4xl tracking-[-1px] leading-none mb-2">{item.name}</h3>
+                  <p className="text-sm text-white/70 font-body font-light leading-relaxed max-w-[32ch]">{item.description}</p>
+                  <span className="text-[10px] uppercase tracking-wider text-white/40 font-body font-medium mt-3 block">{item.specs}</span>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -862,7 +852,7 @@ export default function App() {
           >
             <button
               onClick={() => setActiveModal("collections")}
-              className="liquid-glass-strong rounded-full px-8 py-3.5 text-sm font-semibold text-white flex items-center gap-2 hover:scale-[1.03] active:scale-95 transition-transform duration-200 cursor-pointer"
+              className="liquid-glass-strong rounded-full px-8 py-3.5 text-sm font-semibold text-white flex items-center gap-2 hover:scale-[1.03] active:scale-95 transition-transform duration-200"
             >
               View Full Collection
               <ArrowUpRight className="h-5 w-5 text-white" />
@@ -901,7 +891,7 @@ export default function App() {
                 <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
               </svg>
               <p className="font-heading italic text-xl md:text-2xl text-white/90 leading-relaxed mb-8">
-                "{TESTIMONIALS[activeTestimonial].quote}"
+                &ldquo;{TESTIMONIALS[activeTestimonial].quote}&rdquo;
               </p>
               <div className="flex items-center justify-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-white/10 border border-white/10 flex items-center justify-center text-sm font-heading italic text-white">
@@ -963,7 +953,7 @@ export default function App() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <p className="font-heading italic text-2xl text-white">You're on the list</p>
+                <p className="font-heading italic text-2xl text-white">You&rsquo;re on the list</p>
                 <p className="text-xs text-white/60 mt-2 font-body font-light">Welcome to the Atelier.</p>
               </motion.div>
             ) : (
@@ -1095,29 +1085,29 @@ export default function App() {
                   </button>
                 </div>
 
-                <div className="space-y-8">
-                  {SELECTED_COLLECTIONS.map((item, idx) => (
-                    <div key={idx} className="flex gap-4 items-start group">
-                      <img 
-                        src={item.image} 
-                        alt={item.name} 
-                        className="w-24 h-24 object-cover rounded-xl border border-white/10 shadow-md group-hover:border-white/30 transition-colors"
-                        referrerPolicy="no-referrer"
-                      />
-                      <div className="flex-1">
-                        <div className="flex justify-between items-baseline mb-1">
-                          <h4 className="font-heading italic text-2xl text-white group-hover:text-white transition-colors">{item.name}</h4>
-                          <span className="font-body font-semibold text-white/90 text-sm">{item.price}</span>
+                <div className="space-y-6">
+                  {SELECTED_COLLECTIONS.map((item, idx) => {
+                    const Icon = COLLECTION_ICONS[idx];
+                    return (
+                      <div key={idx} className="flex gap-4 items-start group liquid-glass rounded-[1.25rem] p-5">
+                        <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-white/5 border border-white/10 text-white shrink-0">
+                          <Icon className="h-5 w-5" />
                         </div>
-                        <p className="text-xs md:text-sm text-white/70 font-body font-light leading-relaxed mb-1.5">
-                          {item.description}
-                        </p>
-                        <span className="text-[10px] uppercase tracking-wider text-white/40 block font-body font-medium">
-                          {item.specs}
-                        </span>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex justify-between items-baseline mb-1 gap-2">
+                            <h4 className="font-heading italic text-xl text-white truncate">{item.name}</h4>
+                            <span className="font-body font-semibold text-white/90 text-sm shrink-0">{item.price}</span>
+                          </div>
+                          <p className="text-xs text-white/70 font-body font-light leading-relaxed mb-1.5">
+                            {item.description}
+                          </p>
+                          <span className="text-[10px] uppercase tracking-wider text-white/40 block font-body font-medium">
+                            {item.specs}
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
 
